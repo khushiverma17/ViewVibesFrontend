@@ -1,9 +1,22 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import thumbnail from "../assets/thumbnail.jpg"
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { SidebarContext } from '../context/SidebarContext';
 
-const LikedVideo = ({ sidebar, setSidebar }) => {
+const LikedVideo = () => {
     // Hardcoded data
+    const {sidebar, setSidebar} = useContext(SidebarContext)
+    
+    const userData = JSON.parse(sessionStorage.getItem("userData"))
+    const navigate = useNavigate()
+    useEffect(() => {
+        if(!userData){
+          console.log("User data is not there")
+          navigate("/")
+        }
+      }, [userData, navigate])
+
+
     const video = {
         thumbnail: { thumbnail }, // Replace with actual thumbnail URL
         title: 'Example Video Title',

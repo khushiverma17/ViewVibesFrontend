@@ -1,86 +1,129 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Input from './Input';
+import Button from './Button';
+import axios from 'axios';
 
 function PublishVideo() {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [thumbnail, setThumbnail] = useState(null);
-  const [video, setVideo] = useState(null);
+  const userData = JSON.parse(sessionStorage.getItem("userData"))
+  const navigate = useNavigate()
+  useEffect(() => {
+      if(!userData){
+        console.log("User data is not there")
+        navigate("/")
+      }
+    }, [userData, navigate])
 
-  const handleSubmit = (e) => {
+  const [data, setData] = useState({title:"", description:""})
+  const [thumbnail, setThumbnail]=useState(null)
+  const [video, setVideo] = useState(null)
+
+
+    const changeHandler=(e)=>{
+      setData({...data, [e.target.name] : e.target.value})
+    }
+
+    const fileChangeHandler = (e) => {
+      if(e.target.name === "thumbnail") setThumbnail(e.target.files[0])
+      if(e.target.name === "video") setVideo(e.target.files[0])
+    }
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle form submission
-    console.log({ title, description, thumbnail, video });
+
+    try {
+      const formData = new FormData()
+      formData.append('title', data.title)
+      formData.append('description', data.description)
+      if(thumbnail) formData.append('thumbnail', thumbnail)
+      if(video) formData.append('video', video)
+
+         formData.forEach((value, key) => {
+      console.log(key, value);
+    });
+
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorisation: `Bearer ${userData.data.accessToken}`
+        }
+      }
+
+      const response = await axios.post(
+        // `http://localhost:8000/api/v1/users//${userData.data.user.username}/publish-video`,
+        `http://localhost:8000/api/v1/users/publish-video`,
+        formData,
+        config,
+      )
+      .then((response) => {
+        console.log("Response in publish video is : ", response);
+        navigate("/home")
+        
+      })
+    } catch (error) {
+      console.log("Error in publishing the video: ", error);
+      
+    }
+
+    // console.log({ title, description, thumbnail, video });
   };
 
   return (
     <div className="max-w-3xl mx-auto mt-10 p-6 bg-[#200f0f] rounded-lg shadow-md">
       <h2 className="text-2xl font-bold text-white mb-6">Publish Video</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label htmlFor="title" className="block text-white text-lg mb-2">
-            Title
-          </label>
-          <input
+        <div className='text-white'>
+          <Input
+            name="title"
+            onChange={changeHandler}
+            label="Title"
+            placeholder="Enter title: "
             type="text"
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full px-3 py-2 rounded-lg bg-white text-black outline-none focus:bg-gray-50 border border-gray-200"
-            placeholder="Enter video title"
-            required
           />
         </div>
 
         <div>
-          <label htmlFor="description" className="block text-white text-lg mb-2">
+          <label htmlFor="description" className="block text-white mb-2">
             Description
           </label>
           <textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            name="description"
+            onChange={changeHandler}
             className="w-full px-3 py-2 rounded-lg bg-white text-black outline-none focus:bg-gray-50 border border-gray-200"
             placeholder="Enter video description"
+            type="text"
             rows="4"
-            required
+            // required
           />
         </div>
 
-        <div>
-          <label htmlFor="thumbnail" className="block text-white text-lg mb-2">
-            Thumbnail
-          </label>
-          <input
+        <div className='text-white'>
+          <Input
+            name="thumbnail"
+            onChange={fileChangeHandler}
+            label="Thumbnail"
             type="file"
-            id="thumbnail"
-            onChange={(e) => setThumbnail(e.target.files[0])}
-            className="w-full text-black bg-[#200f0f] file:py-2 file:px-4 file:border"
-            accept="image/*"
-            required
           />
         </div>
 
-        <div>
-          <label htmlFor="video" className="block text-white text-lg mb-2">
-            Video File
-          </label>
-          <input
+        <div className='text-white'>
+          <Input
+            name="video"
+            onChange={fileChangeHandler}
+            label="Video"
             type="file"
-            id="video"
-            onChange={(e) => setVideo(e.target.files[0])}
-            className="w-full text-black bg-[#200f0f] file:py-2 file:px-4 file:border file:border-gray-300 file:rounded-lg "
-            accept="video/*"
-            required
           />
         </div>
 
         <div className="flex justify-center">
-          <button
+          {/* <button
             type="submit"
             className="px-6 py-2 bg-[#d96f2e] text-white rounded-lg hover:bg-[#bf5c1d] transition duration-200"
           >
             Publish Video
-          </button>
+          </button> */}
+          <Button type="submit">Publish</Button>
         </div>
       </form>
     </div>

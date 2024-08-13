@@ -1,7 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaThumbsUp, FaComment } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 function UserTweets() {
+
+  const userData = JSON.parse(sessionStorage.getItem("userData"))
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (!userData) {
+      console.log("User data is not there")
+      navigate("/")
+    }
+  }, [userData, navigate])
   const user = {
     avatar: 'https://via.placeholder.com/50',
     username: 'User Name',

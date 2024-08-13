@@ -1,6 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function ChannelDetails() {
+
+  const userData = JSON.parse(sessionStorage.getItem("userData"))
+  const navigate = useNavigate()
+  useEffect(() => {
+      if(!userData){
+        console.log("User data is not there")
+        navigate("/")
+      }
+    }, [userData, navigate])
   // Mock data for the channel
   const [isSubscribed, setIsSubscribed] = useState(false);
   

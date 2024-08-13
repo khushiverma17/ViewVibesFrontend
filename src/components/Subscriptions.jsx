@@ -1,6 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Subscriptions() {
+
+  const userData = JSON.parse(sessionStorage.getItem("userData"))
+  const navigate = useNavigate()
+  useEffect(() => {
+      if(!userData){
+        console.log("User data is not there")
+        navigate("/")
+      }
+    }, [userData, navigate])
+
   const channels = [
     {
       id: 1,

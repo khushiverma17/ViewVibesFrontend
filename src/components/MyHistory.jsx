@@ -1,7 +1,17 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 function MyHistory() {
+
+  const userData = JSON.parse(sessionStorage.getItem("userData"))
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (!userData) {
+      console.log("User data is not there")
+      navigate("/")
+    }
+  }, [userData, navigate])
+
   const historyItems = [
     {
       id: 1,

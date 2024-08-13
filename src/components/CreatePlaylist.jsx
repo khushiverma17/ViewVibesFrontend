@@ -1,10 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Input from './Input';
 import Button from './Button';
+import { useNavigate } from 'react-router-dom';
 
 function CreatePlaylist() {
     const [playlistName, setPlaylistName] = useState('');
     const [description, setDescription] = useState('');
+
+    const userData = JSON.parse(sessionStorage.getItem("userData"))
+    const navigate = useNavigate()
+    useEffect(() => {
+        if(!userData){
+          console.log("User data is not there")
+          navigate("/")
+        }
+      }, [userData, navigate])
+
 
     const handleSubmit = (e) => {
         e.preventDefault();

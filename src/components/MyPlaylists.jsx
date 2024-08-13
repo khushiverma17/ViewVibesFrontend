@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import thumbnail from "../assets/thumbnail.jpg"
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { MdOutlinePlaylistPlay } from 'react-icons/md';
+import { SidebarContext } from '../context/SidebarContext';
 
-const MyPlaylists = ({ sidebar, setSidebar }) => {
+const MyPlaylists = () => {
+    const {sidebar, setSidebar} = useContext(SidebarContext)
+
+    const userData = JSON.parse(sessionStorage.getItem("userData"))
+    const navigate = useNavigate()
+    useEffect(() => {
+        if(!userData){
+          console.log("User data is not there")
+          navigate("/")
+        }
+      }, [userData, navigate])
+
     // Hardcoded data
     const video = {
         thumbnail: { thumbnail }, // Replace with actual thumbnail URL

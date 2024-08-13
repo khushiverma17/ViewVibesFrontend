@@ -1,91 +1,33 @@
-// import React, { useState } from 'react'
-// import { FaBars, FaBell, FaUserCircle } from "react-icons/fa";
-// import { Link, useNavigate } from 'react-router-dom';
-
-// function Navbar({sidebar, setSidebar}) {
-//   const navigate = useNavigate()
-
-
-//   const loginHandler = async (e) => {
-//     try{
-//       console.log("Login button on navbar is clicked");
-      
-//       navigate("/login");
-//     }catch(error){
-//       console.log("Error in login the user")
-//     }
-//   }
-  
-//   const signupHandler = async(e) => {
-//     try {
-//       console.log("Signup button on navbar is clicked");
-//       navigate("/login");
-      
-//     } catch (error) {
-//       console.log("error in signup");
-      
-//     }
-//   }
-
-//   return (
-//     <nav className='bg-[#200f0f] px-4 py-3 flex justify-between items-center sticky top-0 z-50'>
-//       <div className='flex items-center text-xl'>
-//         <FaBars className='text-white me-4 cursor-pointer' onClick={() => setSidebar(!sidebar)} />
-//         <Link
-//         to="/home"
-//         >
-//           <span className='text-white font-semibold'>YouTer</span>
-//         </Link>
-//       </div>
-//       <div className='flex items-center gap-x-5'>
-//         <div>
-//           <button className='bg-[#d96f2e] px-4 py-2' onClick={loginHandler}>Login/SignUp</button>
-//         </div>
-
-
-//       </div>
-//     </nav>
-//   )
-// }
-
-// export default Navbar
-
-
-
-import React, { useState } from 'react'
-import { FaBars, FaBell, FaUserCircle } from "react-icons/fa";
+import React, { useContext} from 'react'
+import { FaBars} from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';
+import { SidebarContext } from '../context/SidebarContext';
+import Button from './Button';
 
-function Navbar({ sidebar, setSidebar }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('');
+function Navbar() {
+  const {sidebar, setSidebar} = useContext(SidebarContext)
+
   const navigate = useNavigate();
 
-  const loginHandler = async (e) => {
-    try {
-      console.log("Login button on navbar is clicked");
-      navigate("/login");
-    } catch (error) {
-      console.log("Error in login the user");
-    }
-  }
-
-  const signupHandler = async (e) => {
-    try {
-      console.log("Signup button on navbar is clicked");
-      navigate("/login");
-    } catch (error) {
-      console.log("Error in signup");
-    }
-  }
 
   const logoutHandler = async (e) => {
     try {
       console.log("Logout button on navbar is clicked");
       // Perform logout actions here, then redirect if necessary
-      navigate("/home"); // Redirect after logout
+      sessionStorage.clear()
+      navigate("/"); // Redirect after logout
     } catch (error) {
       console.log("Error in logging out");
+    }
+  }
+
+  const myProfileHandler = async (e) => {
+    try{
+      navigate("/my-profile")
+    }
+    catch(error){
+      console.log("Error in going to my profile: ", error);
+      
     }
   }
 
@@ -97,28 +39,17 @@ function Navbar({ sidebar, setSidebar }) {
           <span className='text-white font-semibold'>YouTer</span>
         </Link>
       </div>
+      
+        
+      <div className='flex items-center space-x-4'>
+        <Button type="button" onClick={myProfileHandler}>
+          My Profile
+        </Button>
 
-      {isLoggedIn ? (
-        <div className='flex items-center gap-x-4 w-full max-w-3xl mx-auto'>
-          <input
-            type="text"
-            placeholder="Search..."
-            className="px-4 py-2 rounded-lg w-full bg-[#343434] text-white border border-gray-600 focus:outline-none"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-      ) : (
-        <div className='flex items-center gap-x-5'>
-          <button className='bg-[#d96f2e] px-4 py-2' onClick={loginHandler}>Login/SignUp</button>
-        </div>
-      )}
-
-      {isLoggedIn && (
-        <div className='flex items-center gap-x-5'>
-          <button className='bg-[#d96f2e] px-4 py-2 rounded' onClick={logoutHandler}>Logout</button>
-        </div>
-      )}
+        <Button type="submit" onClick={logoutHandler}>
+          Logout
+        </Button>
+      </div>
     </nav>
   );
 }

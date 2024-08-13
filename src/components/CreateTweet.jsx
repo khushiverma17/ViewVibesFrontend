@@ -1,7 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function CreateTweet() {
   const [tweet, setTweet] = useState('');
+
+  const userData = JSON.parse(sessionStorage.getItem("userData"))
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (!userData) {
+      console.log("User data is not there")
+      navigate("/")
+    }
+  }, [userData, navigate])
 
   const handleTweetChange = (e) => {
     setTweet(e.target.value);

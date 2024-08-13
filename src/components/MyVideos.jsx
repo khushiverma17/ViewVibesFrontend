@@ -1,15 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import thumbnail from "../assets/thumbnail.jpg"
+import { SidebarContext } from '../context/SidebarContext';
 // import moment from 'moment';
 // import { valueConvertor } from '../../data';
 // import { useSelector } from 'react-redux';
 
 // const API_KEY = import.meta.env.VITE_API_KEY;
 
-function MyVideos({sidebar, setSidebar}) {
+function MyVideos() {
   // const lightTheme = useSelector(state => state.themeKey);
   const [data, setData] = useState([]);
+  const {sidebar, setSidebar} = useContext(SidebarContext)
+
+  const userData = JSON.parse(sessionStorage.getItem("userData"))
+  const navigate = useNavigate()
+  useEffect(() => {
+      if(!userData){
+        console.log("User data is not there")
+        navigate("/")
+      }
+    }, [userData, navigate])
 
   const fetchData = async () => {
     // const videoList_url = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=50&regionCode=US&videoCategoryId=${category}&key=${API_KEY}`;

@@ -1,123 +1,103 @@
-import React, { useState } from "react";
-import axios from "axios"
-import { useNavigate } from "react-router-dom"
-import Button from "./Button"
-import Input from "./Input"
 
+
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Button from "./Button";
+import Input from "./Input";
 
 function Login() {
-    const [showLogin, setShowLogin] = useState(true)
+    const [showLogin, setShowLogin] = useState(true);
     const [data, setData] = useState({ name: "", email: "", password: "", verified: "false" });
-
+    const [avatar, setAvatar] = useState(null); // State for avatar file
+    const [coverImage, setCoverImage] = useState(null); // State for cover image file
 
     const navigate = useNavigate();
 
     const changeHandler = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
-    }
+    };
+
+    // Handle file input changes
+    const fileChangeHandler = (e) => {
+        if (e.target.name === "avatar") setAvatar(e.target.files[0]);
+        if (e.target.name === "coverImage") setCoverImage(e.target.files[0]);
+    };
 
     const loginHandler = async (e) => {
         e.preventDefault();
-        // console.log("data is ", data);
-        try {
-            const config = {
-                headers: {
-                    "Content-type": "application/json"
-                }
-            };
-
-            const response = await axios.post(
-                "http://localhost:8080/user/login",
-                data,
-                config
-            );
-
-            // localStorage.setItem("userData", JSON.stringify(response));
-            // sessionStorage.setItem("userData", JSON.stringify(response));
-            navigate("/home")
-
-        }
-        catch (error) {
-            // setLogInStatus({
-            //     msg: "Invalid Username or Password",
-            //     key: Math.random(),
-            // })
-            console.log("eroor: ", error);
-            
-        }
-    }
-
-    const signUpHandler = async (e) => {
-        e.preventDefault();
-
         try {
             const config = {
                 headers: {
                     "Content-type": "application/json",
                 },
             };
+
             const response = await axios.post(
-                "http://localhost:8080/user/register",
+                "http://localhost:8000/api/v1/users/login",
                 data,
                 config
             );
-            await loginHandler()
-            // navigate("/app/welcome");
 
-            // sessionStorage.setItem("userData", JSON.stringify(response));
+            sessionStorage.setItem("userData", JSON.stringify(response.data));
+            navigate("/home");
+        } catch (error) {
+            console.log("Error: ", error);
         }
-        catch (error) {
-            console.log(error);
-            // if (error.response) {
-            //     // setLogInStatus({
-            //     //     msg: "User with this email id already exists",
-            //     //     key: Math.random(),
-            //     // })
-            // }
-            // if (error.response.status === 406) {
-            //     setLogInStatus({
-            //         msg: "User Name already Taken, Please take another one",
-            //         key: Math.random(),
-            //     });
-            // }
+    };
+
+    const signUpHandler = async (e) => {
+        e.preventDefault();
+
+        try {
+            const formData = new FormData();
+            formData.append("username", data.username);
+            formData.append("email", data.email);
+            formData.append("fullName", data.fullName);
+            formData.append("password", data.password);
+            if (avatar) formData.append("avatar", avatar); // Append avatar file if available
+            if (coverImage) formData.append("coverImage", coverImage); // Append cover image file if available
+
+            const config = {
+                headers: {
+                    "Content-Type": "multipart/form-data", // Important for sending files
+                },
+            };
+
+            const response = await axios.post(
+                "http://localhost:8000/api/v1/users/register",
+                formData,
+                config
+            );
+            sessionStorage.setItem("userData", JSON.stringify(response.data));
+            navigate("/home");
+        } catch (error) {
+            console.error("Error during registration: ", error);
         }
-    }
-
-
+    };
 
     return (
         <>
-
-            {showLogin &&
+            {showLogin && (
                 <div className="flex items-center justify-center mt-10">
                     <div className={`mx-auto w-full max-w-lg bg-[#200f0f] rounded-xl p-10 border border-black/10`}>
-                        <div className="mb-2 flex justify-center">
-                            <span className="inline-block w-full max-w-[100px]">
-                                {/* <Logo width="100%" /> */}
-                            </span>
-                        </div>
                         <h2 className="text-center text-2xl font-bold leading-tight text-white">
                             Login to your account
                         </h2>
                         <p className="mt-2 text-center text-base text-white">
                             Don&apos;t have an account?&nbsp;
-                            {/* <Link
-                                to="/signup"
-                                // to = "/"
-                                className="font-medium text-primary transition-all duration-200 hover:underline"
-                            >
-                                Sign Up
-                            </Link> */}
                             <span
-                            className="font-medium text-primary transition-all duration-200 hover:underline hover:cursor-pointer"
-                            onClick={() => setShowLogin(false)}
-                            >Signup</span>
+                                className="font-medium text-primary transition-all duration-200 hover:underline hover:cursor-pointer"
+                                onClick={() => setShowLogin(false)}
+                            >
+                                Signup
+                            </span>
                         </p>
-                        <form>
+                        <form onSubmit={loginHandler}>
                             <div className="space-y-5 text-white">
                                 <Input
                                     onChange={changeHandler}
-                                    name = "email"
+                                    name="email"
                                     label="Email"
                                     placeholder="Enter your email"
                                     type="email"
@@ -136,61 +116,35 @@ function Login() {
                                     type="password"
                                     placeholder="Enter your password"
                                 />
-                                <Button
-                                    type="submit"
-                                    onClick={loginHandler}
-                                >Login</Button>
+                                <Button type="submit">Login</Button>
                             </div>
                         </form>
                     </div>
                 </div>
-            }
+            )}
             {!showLogin && (
                 <div className="flex items-center justify-center mt-10">
                     <div className={`mx-auto w-full max-w-lg bg-[#200f0f] rounded-xl p-10 border border-black/10`}>
-                        <div className="mb-2 flex justify-center">
-                            <span className="inline-block w-full max-w-[100px] ">
-                                {/* <Logo width="100%" /> */}
-                            </span>
-                        </div>
                         <h2 className="text-center text-2xl font-bold leading-tight text-white">
-                            Sign in to your account
+                            Sign up for an account
                         </h2>
                         <p className="mt-2 text-center text-base text-white">
-                            {/* Don&apos;t have an account?&nbsp; */}
                             Already have an account?&nbsp;
-                            {/* <Link
-                                to="/login"
-
-                                // to = "/"
-                                className="font-medium text-primary transition-all duration-200 hover:underline"
+                            <span
+                                className="font-medium text-primary transition-all duration-200 hover:underline hover:cursor-pointer"
+                                onClick={() => setShowLogin(true)}
                             >
                                 Login
-                            </Link> */}
-                            <span
-                            className="font-medium text-primary transition-all duration-200 hover:underline hover:cursor-pointer"
-                            onClick={() => setShowLogin(true)}
-                            >Login</span>
+                            </span>
                         </p>
-                        {/* {error && <p className="text-red-600 mt-8 text-center">{error}</p>} */}
-                        <form className="mt-8">
-                            {/* <form> */}
+                        <form onSubmit={signUpHandler} className="mt-8">
                             <div className="space-y-5 text-white">
                                 <Input
                                     name="username"
                                     onChange={changeHandler}
                                     label="Username"
                                     placeholder="Enter your username"
-
-                                //this object inside register is nothing but data being passed in login function
-                                // {...register("email", {
-                                //     required: true,
-                                //     validate: {
-                                //         //regexr.com
-                                //         matchPattern: (value) => /^\w+([,-]?\w+)*@\w+([,-]?\w+)*(\.\w{2,3})+$/.test(value) ||
-                                //             "Email must be valid"
-                                //     }
-                                // })}
+                                    type="text"
                                 />
                                 <Input
                                     name="email"
@@ -198,63 +152,41 @@ function Login() {
                                     label="Email"
                                     placeholder="Enter your email"
                                     type="email"
-                                //this object inside register is nothing but data being passed in login function
-                                // {...register("email", {
-                                //     required: true,
-                                //     validate: {
-                                //         //regexr.com
-                                //         matchPattern: (value) => /^\w+([,-]?\w+)*@\w+([,-]?\w+)*(\.\w{2,3})+$/.test(value) ||
-                                //             "Email must be valid"
-                                //     }
-                                // })}
                                 />
                                 <Input
                                     name="fullName"
                                     onChange={changeHandler}
-                                    label="FullName"
+                                    label="Full Name"
                                     placeholder="Enter your full name"
                                     type="text"
                                 />
-
                                 <Input
                                     name="avatar"
-                                    onChange={changeHandler}
+                                    onChange={fileChangeHandler} // Handle file input change
                                     label="Avatar"
-                                    placeholder="Enter avatar image"
                                     type="file"
                                 />
                                 <Input
                                     name="coverImage"
-                                    onChange={changeHandler}
-                                    label="CoverImage"
-                                    placeholder="Enter cover image"
+                                    onChange={fileChangeHandler} // Handle file input change
+                                    label="Cover Image"
                                     type="file"
                                 />
-
                                 <Input
                                     name="password"
                                     onChange={changeHandler}
                                     label="Password"
                                     type="password"
                                     placeholder="Enter your password"
-                                // {...register("password", {
-                                //     required: true
-                                // })}
                                 />
-                                <Button
-                                    type="submit"
-                                    // SignIn
-                                    onClick={signUpHandler}
-                                >SignIn</Button>
+                                <Button type="submit">Sign Up</Button>
                             </div>
                         </form>
                     </div>
                 </div>
             )}
-
-
-
         </>
-    )
+    );
 }
+
 export default Login;
