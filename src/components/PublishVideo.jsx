@@ -49,10 +49,12 @@ function PublishVideo() {
           Authorisation: `Bearer ${userData.data.accessToken}`
         }
       }
+      console.log("userdataaaa is, ", userData);
+      
 
       const response = await axios.post(
-        // `http://localhost:8000/api/v1/users//${userData.data.user.username}/publish-video`,
-        `http://localhost:8000/api/v1/users/publish-video`,
+        `http://localhost:8000/api/v1/users/publish-video/${userData.data.user._id}/${userData.data.user.username}`,
+        // `http://localhost:8000/api/v1/users/publish-video`,
         formData,
         config,
       )

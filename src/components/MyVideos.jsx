@@ -2,102 +2,106 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import thumbnail from "../assets/thumbnail.jpg"
 import { SidebarContext } from '../context/SidebarContext';
-// import moment from 'moment';
-// import { valueConvertor } from '../../data';
-// import { useSelector } from 'react-redux';
-
-// const API_KEY = import.meta.env.VITE_API_KEY;
+import axios from 'axios';
+import moment from 'moment'; // Import moment.js
 
 function MyVideos() {
   // const lightTheme = useSelector(state => state.themeKey);
-  const [data, setData] = useState([]);
-  const {sidebar, setSidebar} = useContext(SidebarContext)
+  const [data, setData] = useState({docs:[]});
+  const { sidebar, setSidebar } = useContext(SidebarContext)
 
   const userData = JSON.parse(sessionStorage.getItem("userData"))
   const navigate = useNavigate()
   useEffect(() => {
-      if(!userData){
-        console.log("User data is not there")
-        navigate("/")
-      }
-    }, [userData, navigate])
+    if (!userData) {
+      console.log("User data is not there")
+      navigate("/")
+    }
 
-  const fetchData = async () => {
-    // const videoList_url = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=50&regionCode=US&videoCategoryId=${category}&key=${API_KEY}`;
-    // const response = await fetch(videoList_url);
-    // const result = await response.json();
-    // setData(result.items);
+    const fetchVideos = async () => {
+      try {
+
+        const config = {
+          headers: {
+            Authorisation: `Bearer ${userData.data.accessToken}`
+          },
+          params : {
+            userId : userData.data.user._id,
+            page: 1,
+            limit: 10,
+            sortBy: "views",
+            sortType: "desc"
+          }
+        }
+
+        
+
+        
+
+        axios.get(
+          `http://localhost:8000/api/v1/videos/get-all-videos/${userData.data.user._id}/${userData.data.user.username}`,
+          config
+        )
+          .then((response) => {
+            console.log(response);
+            setData(response.data.data)
+            console.log((response.data.data));
+            console.log("Array size is : ", response.data.data.docs.length);
+            
+            
+          })
+
+
+      } catch (error) {
+        console.log(error);
+
+      }
+
+    }
+
+    fetchVideos()
+
+  }, [])
+
+  if(!data.docs){
+    console.log("no ");
+    
+    return (
+      <div className='text-green-500 text-lg'>Loading...ljklkjlk</div>
+    )
   }
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, [category]);
+
+
   return (
-    // <div>
-    //   {data.length ? (
-    //     data.map(item => (
-    //       <Link key={item._id} to={`video/${item._id}`}>
-    //         <img className="w-full h-56 object-cover rounded-lg" src={item.thumbnail} alt="" />
-    //         <h2 className={`text-lg font-semibold text-white`}>{itemtitle}</h2>
-    //         <h3 className="text-base font-semibold text-gray-600">{item.owner}</h3>
-    //         <p className={`text-sm text-gray-600`}>
-    //           {/* {valueConvertor(item.views)} views &bull; {moment(item.publishedAt).fromNow()} */}
-    //           (item.views) views &bull; {moment(item.publishedAt).fromNow()}
-    //         </p>
-    //       </Link>
-    //     ))
-    //   ) : (
-    //     <p>Loading</p>
-    //   )}
-    // </div>
-
-
-    // <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mt-4 ${sidebar ? " ml-64" : ""}`}>
     <div className={`relative pt-20 px-4 md:px-7 lg:px-17 ${sidebar ? 'ml-64' : ''}`}>
+      <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4`}>
+      {data?.docs?.length ? (
+        data.docs.map((item) => {
+          // <Link key={item._id} to={`video/${item._id}`}>
+          console.log("yesjdfjkl");
+          
+          return (
+              <Link key={item._id} to="/">
+              <img className="w-full h-56 object-cover rounded-lg" src={item.thumbnail} alt="" />
+              <h2 className={`text-lg font-semibold text-white`}>{item.title}Hello</h2>
+              <h3 className="text-base font-semibold text-gray-600">{item.owner}</h3>
+              <p className={`text-sm text-gray-600`}>
+                {/* {valueConvertor(item.views)} views &bull; {moment(item.publishedAt).fromNow()} */}
+                {item.views} views &bull; {moment(item.createdAt).fromNow()}
+              </p>
+            </Link>
+          )
+        })
+      )
+      
+        :
+        <p className='text-green-500 text-lg'>Loading...</p>
+      }
+      </div>
+    </div>
 
-    <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4`}>
-      <Link to={`/home`} className="flex flex-col">
-        <img className="w-full h-36 object-cover rounded-lg" src={thumbnail} alt="Video Thumbnail" />
-        <h2 className="text-md font-semibold text-white mt-2">Title</h2>
-        <p className="text-sm text-gray-400 mt-1">300 views &bull; 2 hours ago</p>
-      </Link>
-      <Link to={`/home`} className="flex flex-col">
-        <img className="w-full h-36 object-cover rounded-lg" src={thumbnail} alt="Video Thumbnail" />
-        <h2 className="text-md font-semibold text-white mt-2">Title</h2>
-        <p className="text-sm text-gray-400 mt-1">300 views &bull; 2 hours ago</p>
-      </Link>
-      <Link to={`/home`} className="flex flex-col">
-        <img className="w-full h-36 object-cover rounded-lg" src={thumbnail} alt="Video Thumbnail" />
-        <h2 className="text-md font-semibold text-white mt-2">Title</h2>
-        <p className="text-sm text-gray-400 mt-1">300 views &bull; 2 hours ago</p>
-      </Link>
-      <Link to={`/home`} className="flex flex-col">
-        <img className="w-full h-36 object-cover rounded-lg" src={thumbnail} alt="Video Thumbnail" />
-        <h2 className="text-md font-semibold text-white mt-2">Title</h2>
-        <p className="text-sm text-gray-400 mt-1">300 views &bull; 2 hours ago</p>
-      </Link>
-      <Link to={`/home`} className="flex flex-col">
-        <img className="w-full h-36 object-cover rounded-lg" src={thumbnail} alt="Video Thumbnail" />
-        <h2 className="text-md font-semibold text-white mt-2">Title</h2>
-        <p className="text-sm text-gray-400 mt-1">300 views &bull; 2 hours ago</p>
-      </Link>
-      <Link to={`/home`} className="flex flex-col">
-        <img className="w-full h-36 object-cover rounded-lg" src={thumbnail} alt="Video Thumbnail" />
-        <h2 className="text-md font-semibold text-white mt-2">Title</h2>
-        <p className="text-sm text-gray-400 mt-1">300 views &bull; 2 hours ago</p>
-      </Link>
-      <Link to={`/home`} className="flex flex-col">
-        <img className="w-full h-36 object-cover rounded-lg" src={thumbnail} alt="Video Thumbnail" />
-        <h2 className="text-md font-semibold text-white mt-2">Title</h2>
-        <p className="text-sm text-gray-400 mt-1">300 views &bull; 2 hours ago</p>
-      </Link>
-      <Link to={`/home`} className="flex flex-col">
-        <img className="w-full h-36 object-cover rounded-lg" src={thumbnail} alt="Video Thumbnail" />
-        <h2 className="text-md font-semibold text-white mt-2">Title</h2>
-        <p className="text-sm text-gray-400 mt-1">300 views &bull; 2 hours ago</p>
-      </Link>
-    </div>
-    </div>
+
   )
 }
 

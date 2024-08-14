@@ -52,24 +52,12 @@ function MyProfile() {
 
     }, [])
 
-    useEffect(() => {
-      if(user){
-        console.log("user is ", user);
-        console.log("user.data ", user.data);
-        
-        
-      }
-    }, [user])
-
-  const channel = {
-    avatar: 'https://via.placeholder.com/100',
-    coverImage: 'https://via.placeholder.com/800x200',
-    username: 'channeluser',
-    fullname: 'Channel User',
-    totalViews: '1.2M',
-    totalSubscribers: '250K',
-    subscribedChannels: 45,
-  };
+    // useEffect(() => {
+    //   if(user){
+    //     console.log("user is ", user);
+    //     console.log("user.data ", user.data);
+    //   }
+    // }, [user])
 
   if(!user){
     return(
