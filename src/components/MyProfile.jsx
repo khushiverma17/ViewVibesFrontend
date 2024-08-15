@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import Button from './Button';
 
 function MyProfile() {
 
@@ -8,10 +9,20 @@ function MyProfile() {
   // console.log(userData);
   console.log(userData);
   const [user, setUser] = useState()
-  
-  
-  
   const navigate = useNavigate()
+
+
+  const editHandler = () => {
+    try {
+      navigate("/edit-my-profile")
+    } catch (error) {
+      console.log("Error in going from my profile to edit my profile: ", error);
+      
+    }
+  }
+  
+  
+  
   useEffect(() => {
       if(!userData){
         console.log("User data is not there")
@@ -99,11 +110,11 @@ function MyProfile() {
           </p> */}
         </div>
 
-        <button
-          className={`px-6 py-2 rounded-full text-white font-semibold bg-[#d96f2e] transition duration-300`}
+        <Button
+          onClick = {editHandler}
         >
             Edit
-        </button>
+        </Button>
 
         
       </div>

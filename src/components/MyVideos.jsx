@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate} from 'react-router-dom';
 import thumbnail from "../assets/thumbnail.jpg"
 import { SidebarContext } from '../context/SidebarContext';
 import axios from 'axios';
@@ -7,11 +7,11 @@ import moment from 'moment'; // Import moment.js
 
 function MyVideos() {
   // const lightTheme = useSelector(state => state.themeKey);
+  const navigate = useNavigate()
   const [data, setData] = useState({docs:[]});
   const { sidebar, setSidebar } = useContext(SidebarContext)
 
   const userData = JSON.parse(sessionStorage.getItem("userData"))
-  const navigate = useNavigate()
   useEffect(() => {
     if (!userData) {
       console.log("User data is not there")
@@ -63,13 +63,13 @@ function MyVideos() {
 
   }, [])
 
-  if(!data.docs){
-    console.log("no ");
+  // if(!data.docs){
+  //   console.log("no ");
     
-    return (
-      <div className='text-green-500 text-lg'>Loading...ljklkjlk</div>
-    )
-  }
+  //   return (
+  //     <div className='text-green-500 text-lg'>Loading...ljklkjlk</div>
+  //   )
+  // }
 
 
 
@@ -83,9 +83,9 @@ function MyVideos() {
           
           return (
               <Link key={item._id} to="/">
-              <img className="w-full h-56 object-cover rounded-lg" src={item.thumbnail} alt="" />
+              <img className="w-full h-44 object-cover rounded-lg" src={item.thumbnail} alt="" />
               <h2 className={`text-lg font-semibold text-white`}>{item.title}Hello</h2>
-              <h3 className="text-base font-semibold text-gray-600">{item.owner}</h3>
+              {/* <h3 className="text-base font-semibold text-gray-600">{item.owner}</h3> */}
               <p className={`text-sm text-gray-600`}>
                 {/* {valueConvertor(item.views)} views &bull; {moment(item.publishedAt).fromNow()} */}
                 {item.views} views &bull; {moment(item.createdAt).fromNow()}
