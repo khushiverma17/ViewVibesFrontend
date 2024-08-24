@@ -15,6 +15,8 @@ import ChannelDetails from "./components/ChannelDetails"
 import EditMyProfile from "./components/EditMyProfile"
 import MyProfile from "./components/MyProfile"
 import Layout from "./Layout"
+import VideoPage from "./components/VideoPage"
+import UpdateVideo from "./components/UpdateVideo"
 
 function App() {
 
@@ -70,6 +72,8 @@ function App() {
             <Route path="/channel-details" element={<ChannelDetails />} />
             <Route path="/my-profile" element={<MyProfile />} />
             <Route path="/edit-my-profile" element={<EditMyProfile />} />
+            <Route path="/video-page/:title/:videoid/:username/:userid" element={<VideoPage/>}/>
+            <Route path="/update-video/:videoid/:username/:userid" element={<UpdateVideo/>}/>
           </Routes>
         </Layout>
       } />

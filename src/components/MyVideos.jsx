@@ -63,13 +63,6 @@ function MyVideos() {
 
   }, [])
 
-  // if(!data.docs){
-  //   console.log("no ");
-    
-  //   return (
-  //     <div className='text-green-500 text-lg'>Loading...ljklkjlk</div>
-  //   )
-  // }
 
 
 
@@ -78,11 +71,19 @@ function MyVideos() {
       <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4`}>
       {data?.docs?.length ? (
         data.docs.map((item) => {
-          // <Link key={item._id} to={`video/${item._id}`}>
-          console.log("yesjdfjkl");
+          console.log("ITEM IS SOMETHING LIKE: ", item);
+          
           
           return (
-              <Link key={item._id} to="/">
+              <Link 
+                key={item._id} 
+                to={`/video-page/${item.title}/${item._id}/${item.ownerDetails.username}/${item.ownerDetails._id}`}
+                state={
+                  {
+                    item: item
+                  }
+                }
+              >
               <img className="w-full h-44 object-cover rounded-lg" src={item.thumbnail} alt="" />
               <h2 className={`text-lg font-semibold text-white`}>{item.title}Hello</h2>
               {/* <h3 className="text-base font-semibold text-gray-600">{item.owner}</h3> */}
