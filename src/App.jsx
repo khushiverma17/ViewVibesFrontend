@@ -50,35 +50,35 @@ function App() {
     // </BrowserRouter>
 
     <BrowserRouter>
-    <Routes>
-      {/* Login route without Navbar and Sidebar */}
-      <Route path="/" element={<Login />} />
+      <Routes>
+        {/* Login route without Navbar and Sidebar */}
+        <Route path="/" element={<Login />} />
 
-      {/* All other routes with Navbar and Sidebar */}
-      <Route path="/*" element={
-        <Layout>
-          <Routes>
-            <Route path="/home" element={<Home />} />
-            <Route path="/create-playlist" element={<CreatePlaylist />} />
-            <Route path="/liked-videos" element={<LikedVideos />} />
-            <Route path="/my-playlists" element={<MyPlaylists />} />
-            <Route path="/my-videos" element={<MyVideos />} />
-            <Route path="/subscriptions" element={<Subscriptions />} />
-            <Route path="/my-subscribers" element={<MySubscribers />} />
-            <Route path="/create-tweet" element={<CreateTweet />} />
-            <Route path="/user-tweets" element={<UserTweets />} />
-            <Route path="/publish-video" element={<PublishVideo />} />
-            <Route path="/my-history" element={<MyHistory />} />
-            <Route path="/channel-details" element={<ChannelDetails />} />
-            <Route path="/my-profile" element={<MyProfile />} />
-            <Route path="/edit-my-profile" element={<EditMyProfile />} />
-            <Route path="/video-page/:title/:videoid/:username/:userid" element={<VideoPage/>}/>
-            <Route path="/update-video/:videoid/:username/:userid" element={<UpdateVideo/>}/>
-          </Routes>
-        </Layout>
-      } />
-    </Routes>
-  </BrowserRouter>
+        {/* All other routes with Navbar and Sidebar */}
+        <Route path="/*" element={
+          <Layout>
+            <Routes>
+              <Route path="/home" element={<Home />} />
+              <Route path="/create-playlist" element={<CreatePlaylist />} />
+              <Route path="/liked-videos" element={<LikedVideos />} />
+              <Route path="/my-playlists" element={<MyPlaylists />} />
+              <Route path="/my-videos" element={<MyVideos />} />
+              <Route path="/subscriptions" element={<Subscriptions />} />
+              <Route path="/my-subscribers" element={<MySubscribers />} />
+              <Route path="/create-tweet" element={<CreateTweet />} />
+              <Route path="/user-tweets" element={<UserTweets />} />
+              <Route path="/publish-video" element={<PublishVideo />} />
+              <Route path="/my-history" element={<MyHistory />} />
+              <Route path="/channel-details/:username/:userid" element={<ChannelDetails />} />
+              <Route path="/my-profile" element={<MyProfile />} />
+              <Route path="/edit-my-profile" element={<EditMyProfile />} />
+              <Route path="/video-page/:title/:videoid/:username/:userid" element={<VideoPage />} />
+              <Route path="/update-video/:videoid/:username/:userid" element={<UpdateVideo />} />
+            </Routes>
+          </Layout>
+        } />
+      </Routes>
+    </BrowserRouter>
 
   )
 }

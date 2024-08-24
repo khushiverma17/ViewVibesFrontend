@@ -10,26 +10,30 @@ const VideoPage = () => {
   const { sidebar } = useContext(SidebarContext);
   const location = useLocation()
   const [isSubscribed, setIsSubscribed] = useState()
-  const [isOwner, setIsOwner] = useState(true)
+  const [isOwner, setIsOwner] = useState(false)
 
   const { item: videoItem } = location.state
-  console.log("VIDEOITEM IS: ", videoItem);
+  // console.log("VIDEOITEM IS: ", videoItem);
   const navigate = useNavigate()
 
   useEffect(() => {
     if (videoItem.ownerDetails._id === userData.data.user._id) {
       setIsOwner(true);
+      console.log(isOwner);
+      
     }
   }, [videoItem.ownerDetails._id, userData.data.user._id]);
 
 
   const { title, videoid, username } = useParams()
-  console.log(title);
+  // console.log(title);
 
 
 
   useEffect(() => {
-    console.log("user is sub", isSubscribed);
+    // console.log("user is sub", isSubscribed);
+    // console.log("HELLO ", videoItem.ownerDetails._id);
+    
 
     const checkSubscriptionStatus = async () => {
       try {
@@ -46,9 +50,9 @@ const VideoPage = () => {
           `http://localhost:8000/api/v1/subscriptions/check-subscription/${videoItem.ownerDetails._id}`,
           config
         ).then((response) => {
-          console.log(response);
+          // console.log(response);
 
-          console.log("hello: ", response.data.data.subscribed);
+          // console.log("hello: ", response.data.data.subscribed);
 
           if (response.data.data.subscribed) {
             setIsSubscribed(true);
@@ -56,11 +60,11 @@ const VideoPage = () => {
             setIsSubscribed(false);
           }
         }).catch((error) => {
-          console.log(error);
+          // console.log(error);
 
         })
       } catch (error) {
-        console.log(error);
+        // console.log(error);
 
       }
     }
@@ -79,7 +83,7 @@ const updateHandler = () => {
 
 
   const subscriptionHandler = () => {
-    console.log("channel id is : ", videoItem.ownerDetails._id);
+    // console.log("channel id is : ", videoItem.ownerDetails._id);
 
 
     // setIsSubscribed(!isSubscribed)
@@ -98,8 +102,8 @@ const updateHandler = () => {
       `http://localhost:8000/api/v1/subscriptions/toggle-subscription/${videoItem.ownerDetails._id}`,
       config
     ).then((response) => {
-      console.log("Response from axios is ", response);
-      console.log("khushi", response.data.data.subscribed);
+      // console.log("Response from axios is ", response);
+      // console.log("khushi", response.data.data.subscribed);
 
       if (response.data.data.subscribed) {
         setIsSubscribed(true)
