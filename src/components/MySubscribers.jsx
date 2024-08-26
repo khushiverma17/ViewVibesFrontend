@@ -39,44 +39,6 @@ function MySubscribers() {
 
   }, [])
 
-  const channels = [
-    {
-      id: 1,
-      avatar: 'https://via.placeholder.com/50',
-      username: 'Channel One',
-    },
-    {
-      id: 2,
-      avatar: 'https://via.placeholder.com/50',
-      username: 'Channel Two',
-    },
-    {
-      id: 3,
-      avatar: 'https://via.placeholder.com/50',
-      username: 'Channel Three',
-    },
-    {
-      id: 4,
-      avatar: 'https://via.placeholder.com/50',
-      username: 'Channel Three',
-    },
-    {
-      id: 5,
-      avatar: 'https://via.placeholder.com/50',
-      username: 'Channel Three',
-    },
-    {
-      id: 6,
-      avatar: 'https://via.placeholder.com/50',
-      username: 'Channel Three',
-    },
-    {
-      id: 7,
-      avatar: 'https://via.placeholder.com/50',
-      username: 'Channel Three',
-    },
-
-  ];
 
   if (!data) {
     return (
@@ -94,7 +56,7 @@ function MySubscribers() {
             to={`/channel-details/${item.subscriber.username}/${item.subscriber._id}`}
             state={
               {
-                channelProfile: item.subscriber
+                channel: item.subscriber
               }
             }
 

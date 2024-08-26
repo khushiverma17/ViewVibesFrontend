@@ -33,11 +33,6 @@ function MyVideos() {
             sortType: "desc"
           }
         }
-
-        
-
-        
-
         axios.get(
           `http://localhost:8000/api/v1/videos/get-all-videos/${userData.data.user._id}/${userData.data.user.username}`,
           config
