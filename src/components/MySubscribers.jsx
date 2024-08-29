@@ -68,6 +68,7 @@ function MySubscribers() {
             />
             <span className="text-lg text-white font-semibold">{item?.subscriber?.username}</span>
           </Link>
+          
         ))}
       </ul>
     </div>

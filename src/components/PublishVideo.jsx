@@ -60,7 +60,8 @@ function PublishVideo() {
       )
       .then((response) => {
         console.log("Response in publish video is : ", response);
-        navigate("/home")
+        // navigate("/home")
+        navigate("/my-videos")
         
       })
     } catch (error) {

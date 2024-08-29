@@ -26,7 +26,7 @@ function Sidebar() {
           <NavLink
             to="/home"
             className={({ isActive }) =>
-              `flex items-center px-3 text-white py-2 ${isActive ? 'bg-[#d96f2e]' : ''}`
+              `flex items-center rounded px-3 text-white py-2 ${isActive ? 'bg-[#d96f2e]' : ''}`
             }
           >
             <MdHome className='inline-block w-6 h-6 mr-2 -mt-2'></MdHome>
@@ -37,7 +37,7 @@ function Sidebar() {
           <NavLink
             to="/my-playlists"
             className={({ isActive }) =>
-              `flex items-center px-3 text-white py-2 ${isActive ? 'bg-[#d96f2e]' : ''}`
+              `flex items-center rounded px-3 text-white py-2 ${isActive ? 'bg-[#d96f2e]' : ''}`
             }
           >
             <MdOutlinePlaylistPlay className='inline-block w-6 h-6 mr-2 -mt-2'></MdOutlinePlaylistPlay>
@@ -48,7 +48,7 @@ function Sidebar() {
           <NavLink
             to="/create-playlist"
             className={({ isActive }) =>
-              `flex items-center px-3 text-white py-2 ${isActive ? 'bg-[#d96f2e]' : ''}`
+              `flex items-center rounded px-3 text-white py-2 ${isActive ? 'bg-[#d96f2e]' : ''}`
             }
           >
             <MdPlaylistAdd className="inline-block w-6 h-6 mr-2 -mt-1" />
@@ -59,7 +59,7 @@ function Sidebar() {
           <NavLink
             to="/liked-videos"
             className={({ isActive }) =>
-              `flex items-center px-3 text-white py-2 ${isActive ? 'bg-[#d96f2e]' : ''}`
+              `flex items-center rounded px-3 text-white py-2 ${isActive ? 'bg-[#d96f2e]' : ''}`
             }
           >
             <AiOutlineLike className='inline-block w-6 h-6 mr-2 -mt-2'></AiOutlineLike>
@@ -70,7 +70,7 @@ function Sidebar() {
           <NavLink
             to="/my-videos"
             className={({ isActive }) =>
-              `flex items-center px-3 text-white py-2 ${isActive ? 'bg-[#d96f2e]' : ''}`
+              `flex items-center rounded px-3 text-white py-2 ${isActive ? 'bg-[#d96f2e]' : ''}`
             }
           >
             <BiSolidVideos className='inline-block w-6 h-6 mr-2 -mt-2'></BiSolidVideos>
@@ -81,7 +81,7 @@ function Sidebar() {
           <NavLink
             to="/subscriptions"
             className={({ isActive }) =>
-              `flex items-center px-3 text-white py-2 ${isActive ? 'bg-[#d96f2e]' : ''}`
+              `flex items-center rounded px-3 text-white py-2 ${isActive ? 'bg-[#d96f2e]' : ''}`
             }
           >
             <MdOutlineSubscriptions className='inline-block w-6 h-6 mr-2 -mt-2'></MdOutlineSubscriptions>
@@ -92,7 +92,7 @@ function Sidebar() {
           <NavLink
             to="/my-subscribers"
             className={({ isActive }) =>
-              `flex items-center px-3 text-white py-2 ${isActive ? 'bg-[#d96f2e]' : ''}`
+              `flex items-center rounded px-3 text-white py-2 ${isActive ? 'bg-[#d96f2e]' : ''}`
             }
           >
             <FaUsers className='inline-block w-6 h-6 mr-2 -mt-2'></FaUsers>
@@ -103,7 +103,7 @@ function Sidebar() {
           <NavLink
             to="/create-tweet"
             className={({ isActive }) =>
-              `flex items-center px-3 text-white py-2 ${isActive ? 'bg-[#d96f2e]' : ''}`
+              `flex items-center rounded px-3 text-white py-2 ${isActive ? 'bg-[#d96f2e]' : ''}`
             }
           >
             <MdPostAdd className='inline-block w-6 h-6 mr-2 -mt-2'></MdPostAdd>
@@ -114,7 +114,7 @@ function Sidebar() {
           <NavLink
             to="/publish-video"
             className={({ isActive }) =>
-              `flex items-center px-3 text-white py-2 ${isActive ? 'bg-[#d96f2e]' : ''}`
+              `flex items-center rounded px-3 text-white py-2 ${isActive ? 'bg-[#d96f2e]' : ''}`
             }
           >
             <CiVideoOn className='inline-block w-6 h-6 mr-2 -mt-2'></CiVideoOn>
@@ -125,7 +125,7 @@ function Sidebar() {
           <NavLink
             to="/my-history"
             className={({ isActive }) =>
-              `flex items-center px-3 text-white py-2 ${isActive ? 'bg-[#d96f2e]' : ''}`
+              `flex items-center rounded px-3 text-white py-2 ${isActive ? 'bg-[#d96f2e]' : ''}`
             }
           >
             <GrHistory className='inline-block w-6 h-6 mr-2 -mt-2'></GrHistory>

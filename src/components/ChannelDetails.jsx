@@ -10,6 +10,9 @@ function ChannelDetails() {
   const  location = useLocation()
   const {channel} = location.state
   const [data, setData] = useState()
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  console.log("ch: ", channel);
+  
 
   useEffect(() => {
       if(!userData){
@@ -17,23 +20,26 @@ function ChannelDetails() {
         navigate("/")
       }
       console.log("hannel is ", channel)
+      console.log("lao",  channel);
+      
 
       const config = {
         headers: {
           Authorisation : `Bearer ${userData.data.accessToken}`
         },
         params: {
-          username : channel.username,
-          userId : channel._id
+          username : channel?.username,
+          userId : channel?._id
         }
       }
 
-      axios.get(`http://localhost:8000/api/v1/users/c/${channel.username}`,
+      axios.get(`http://localhost:8000/api/v1/users/c/${channel?.username}`,
         config
       ).then((response) => {
         console.log("REsponse is : ", response);
         setData(response.data.data)
         console.log(response.data.data);
+        setIsSubscribed(response.data.data.isSubscribed)
         
       }).catch((error) => {
         console.log(error);
@@ -41,23 +47,34 @@ function ChannelDetails() {
       })
     }, [])
   // Mock data for the channel
-  const [isSubscribed, setIsSubscribed] = useState(false);
 
-  
-  const channelgiven = {
-    avatar: 'https://via.placeholder.com/100',
-    coverImage: 'https://via.placeholder.com/800x200',
-    username: 'channeluser',
-    fullname: 'Channel User',
-    totalViews: '1.2M',
-    totalSubscribers: '250K',
-    subscribedChannels: 45
-  };
 
   const handleSubscribe = () => {
-    setIsSubscribed(!isSubscribed);
-    // Add additional subscribe logic here
-  };
+    console.log("inseid ha sun");
+    
+    const config = {
+      headers: {
+        Authorisation: `Bearer ${userData.data.accessToken}`
+      },
+      params: {
+        channelId: channel._id
+      }
+    }
+
+
+    axios.get(
+      `http://localhost:8000/api/v1/subscriptions/toggle-subscription/${channel._id}`,
+      config
+    ).then((response) => {
+      console.log("ju", response);
+      
+      setIsSubscribed(!isSubscribed)
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
+
+
   if(!data){
     return(
       <div>Loading...</div>
@@ -93,9 +110,9 @@ function ChannelDetails() {
         
         <button
           onClick={handleSubscribe}
-          className={`px-6 py-2 rounded-full text-white font-semibold ${data.isSubscribed ? 'bg-gray-500' : 'bg-[#d96f2e]'} transition duration-300`}
+          className={`px-6 py-2 rounded-full text-white font-semibold ${!isSubscribed ? 'bg-gray-500' : 'bg-[#d96f2e]'} transition duration-300`}
         >
-          {data.isSubscribed ? 'Subscribed' : 'Subscribe'}
+          {isSubscribed ? 'Subscribed' : 'Subscribe'}
         </button>
       </div>
     </div>
