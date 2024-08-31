@@ -5,6 +5,7 @@ import moment from 'moment';
 import axios from 'axios';
 import { FaRegThumbsUp } from "react-icons/fa6";
 import { FaThumbsUp } from "react-icons/fa";
+import Comment from './Comment';
 
 const VideoPage = () => {
 
@@ -162,30 +163,30 @@ const VideoPage = () => {
         Authorisation: `Bearer ${userData.data.accessToken}`,
       },
       params: {
-        commentId : commentId
+        commentId: commentId
       }
     }
     axios.post(`http://localhost:8000/api/v1/likes/toggle-comment-like/${commentId}`,
       {},
       config
-    ).then((response)=>{
+    ).then((response) => {
       console.log("clh, ", response);
       // setCommentIsLiked(!isLiked)
-      setComments((prevComments) => 
-        prevComments.map((comment) => 
+      setComments((prevComments) =>
+        prevComments.map((comment) =>
           comment._id === commentId
             ? {
-                ...comment,
-                isLiked: !comment.isLiked,
-                likesCount: comment.isLiked ? comment.likesCount - 1 : comment.likesCount + 1
-              }
+              ...comment,
+              isLiked: !comment.isLiked,
+              likesCount: comment.isLiked ? comment.likesCount - 1 : comment.likesCount + 1
+            }
             : comment
         )
       );
-      
-    }).catch((error)=>{
+
+    }).catch((error) => {
       console.log(error);
-      
+
     })
   }
 
@@ -214,12 +215,12 @@ const VideoPage = () => {
     ).then((response) => {
       console.log(response);
       setComments([response.data.data, ...comments])
-      
+
       console.log("re", response.data.data);
 
       console.log(comments)
-      
-    
+
+
 
     }).catch((error) => {
       console.log(error);
@@ -227,6 +228,11 @@ const VideoPage = () => {
     })
 
   }
+
+  const removeComment = (commentId) => {
+    setComments((prevComments) => prevComments.filter((comment) => comment._id != commentId))
+  }
+
 
 
 
@@ -336,33 +342,47 @@ const VideoPage = () => {
           </div>
 
           {/* Existing Comments */}
-          {comments?.length > 0 && comments.map((comment) => (
-            <div key={comment._id} className="mb-4">
-              <div className="flex items-center space-x-4 mb-2">
-                <div className="w-8 h-8 bg-gray-600 rounded-full">
-                  <img src={comment.owner.avatar} alt="" className='rounded-full' />
+          {comments?.length > 0 && comments.map((comment) => {
+            return (
+              <div key={comment._id} className="mb-4">
+                <div className="flex items-center space-x-4 mb-2">
+                  <div className="w-8 h-8 bg-gray-600 rounded-full">
+                    <img src={comment.owner.avatar} alt="" className='rounded-full' />
+                  </div>
+                  <span className="font-semibold">{comment.owner.username}</span>
                 </div>
-                <span className="font-semibold">{comment.owner.username}</span>
-              </div>
-              <p className="mb-2">{comment.content}</p>
-              <div className="flex items-center space-x-4">
-                <button 
-                className="flex items-center space-x-1 text-sm"
-                onClick={() => commentLikeHandler(comment._id)}
-                >
+                {/* <div className='relative'>
+                  <span className="mb-2">{comment.content}</span>
+                  {comment.owner._id === userData.data.user._id && 
+                  <span 
+                  className="absolute right-0 cursor-pointer"
+                  onClick={(e) => editCommentHandler(e)}
+                  >
+                    <MdOutlineModeEdit />
+                  </span>}
                   
-                  <span>
-                    {/* <FaRegThumbsUp /> */}
-                    {!comment.isLiked ? <FaRegThumbsUp/> : <FaThumbsUp/>}
-                  </span>
-                  <span>{comment.likesCount}
-                  </span>
+                </div> */}
+                <Comment comment = {comment} removeComment = {removeComment}/>
 
-                </button>
+                <div className="flex items-center space-x-4">
+                  <button
+                    className="flex items-center space-x-1 text-sm"
+                    onClick={() => commentLikeHandler(comment._id)}
+                  >
+
+                    <span>
+                      {/* <FaRegThumbsUp /> */}
+                      {!comment.isLiked ? <FaRegThumbsUp /> : <FaThumbsUp />}
+                    </span>
+                    <span>{comment.likesCount}
+                    </span>
+
+                  </button>
+                </div>
+                <hr className="border-gray-700 mt-4" />
               </div>
-              <hr className="border-gray-700 mt-4" />
-            </div>
-          ))}
+            )
+          })}
         </div>
 
       </div>
