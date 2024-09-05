@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,10 +19,31 @@ function CreateTweet() {
   };
 
   const handleTweetSubmit = (e) => {
+
+    console.log("inseide");
+    
     e.preventDefault();
-    // Handle tweet submission here
-    console.log('Tweet submitted:', tweet);
-    setTweet(''); // Clear the tweet text area after submission
+
+    const config = {
+      headers: {
+        Authorisation: `Bearer ${userData.data.accessToken}`
+      }
+    }
+
+    axios.post(`http://localhost:8000/api/v1/tweets/create-tweet`,
+      {
+        content: tweet
+      },
+      config
+    ).then((response) => {
+      console.log(response);
+      setTweet("")
+      alert("Tweet posted successfully")
+    }).catch((error) =>{
+      console.log(error);
+    })
+
+
   };
 
   return (

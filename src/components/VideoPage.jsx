@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { SidebarContext } from '../context/SidebarContext';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import {useLocation, useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import axios from 'axios';
 import { FaRegThumbsUp } from "react-icons/fa6";
 import { FaThumbsUp } from "react-icons/fa";
+import { FaRegSquarePlus } from "react-icons/fa6";
 import Comment from './Comment';
+import { PlaylistsContext } from '../context/PlaylistsContext';
 
 const VideoPage = () => {
 
@@ -19,9 +21,13 @@ const VideoPage = () => {
   const [likeCnt, setLikeCnt] = useState()
   const [newComment, setNewComment] = useState()
   const [comments, setComments] = useState()
-
+  
   const { item: videoItem } = location.state
+  console.log("videois is ", videoItem)
   const navigate = useNavigate()
+
+  const {userPlaylists, setUserPlaylists} = useContext(PlaylistsContext)
+  const [showPlaylistDropdown, setShowPlaylistDropdown] = useState(false)
 
 
 
@@ -72,7 +78,7 @@ const VideoPage = () => {
         setComments(response.data.data.docs)
 
       }).catch((error) => {
-        console.log("error");
+        console.log(error);
 
       })
 
@@ -233,8 +239,32 @@ const VideoPage = () => {
     setComments((prevComments) => prevComments.filter((comment) => comment._id != commentId))
   }
 
+  const addVideoToPlaylistHandler = (playlist_Id) => {
+    console.log("inside addVideoToPlaylistHandler");
+    // console.log(userData.data.accessToken, "hel");
+    
+    
+    const config = {
+      headers: {
+        Authorisation : `Bearer ${userData.data.accessToken}`
+      },
+      params: {
+        playlistId : playlist_Id,
+        videoId: video._id
+      }
+    }
 
+    axios.post(`http://localhost:8000/api/v1/playlists/add-video-to-playlist/${playlist_Id}/${video._id}`,
+      {},
+      config
+    ).then((response) => {
+      console.log("video added to playlist", response);
+      alert("Video added to playlist")
+    }).catch((error) => {
+      console.log(error)
+    })
 
+  }
 
 
   if (!video) {
@@ -268,14 +298,50 @@ const VideoPage = () => {
             {moment(video.createdAt).fromNow()}
           </span>
           <div className="flex space-x-4">
-            <button
-              className="flex items-center space-x-1 text-lg hover:bg-slate-500 h-9 w-16 rounded-md justify-center"
-              onClick={videoLikeHandler}
-            >
-              {isLiked ? <FaThumbsUp /> : <FaRegThumbsUp />}
-              {/* <span>{video.likesCount}</span> */}
-              <span>{likeCnt}</span>
-            </button>
+            <div>
+              <button
+                className="flex items-center space-x-1 text-lg hover:bg-slate-500 h-9 w-16 rounded-md justify-center"
+                onClick={videoLikeHandler}
+              >
+                {isLiked ? <FaThumbsUp /> : <FaRegThumbsUp />}
+                {/* <span>{video.likesCount}</span> */}
+                <span>{likeCnt}</span>
+              </button>
+            </div>
+            {/* <div className='relative'>
+              <button
+                className="flex items-center space-x-1 text-lg hover:bg-slate-500 h-9 w-10 rounded-md justify-center">
+                <FaRegSquarePlus />
+              </button>
+            </div> */}
+
+            <div className="relative">
+              <button
+                className="flex items-center space-x-1 text-lg hover:bg-slate-500 h-9 w-10 rounded-md justify-center"
+                onClick={() => setShowPlaylistDropdown(!showPlaylistDropdown)}
+              >
+                <FaRegSquarePlus />
+              </button>
+
+              {/* Dropdown for Playlists */}
+              {showPlaylistDropdown && (
+                <div className="absolute right-0 mt-2 w-auto bg-gray-800 rounded-md shadow-lg z-10">
+                  <ul className="py-2 text-sm">
+                    {userPlaylists.map((playlist) => (
+                      <li key={playlist._id} className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
+                        <div
+                          onClick={() => addVideoToPlaylistHandler(playlist._id)}
+                        >
+                          {playlist.name}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+
+
           </div>
         </div>
 
@@ -351,18 +417,9 @@ const VideoPage = () => {
                   </div>
                   <span className="font-semibold">{comment.owner.username}</span>
                 </div>
-                {/* <div className='relative'>
-                  <span className="mb-2">{comment.content}</span>
-                  {comment.owner._id === userData.data.user._id && 
-                  <span 
-                  className="absolute right-0 cursor-pointer"
-                  onClick={(e) => editCommentHandler(e)}
-                  >
-                    <MdOutlineModeEdit />
-                  </span>}
-                  
-                </div> */}
-                <Comment comment = {comment} removeComment = {removeComment}/>
+                <div className='relative'>
+                  <Comment comment={comment} removeComment={removeComment} />
+                </div>
 
                 <div className="flex items-center space-x-4">
                   <button

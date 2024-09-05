@@ -1,16 +1,34 @@
-import React, { useEffect } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 function MyHistory() {
 
   const userData = JSON.parse(sessionStorage.getItem("userData"))
   const navigate = useNavigate()
+  const [data, setData] = useState()
   useEffect(() => {
     if (!userData) {
       console.log("User data is not there")
       navigate("/")
     }
-  }, [userData, navigate])
+
+    const config = {
+      headers: {
+        Authorisation: `Bearer ${userData.data.accessToken}`
+      }
+    }
+
+    axios.get(`http://localhost:8000/api/v1/users/history`,
+      config
+    ).then((response) => {
+      console.log(response)
+      setData(response.data.data)
+    }).catch((error) => {
+      console.log(error)
+    })
+
+  }, [])
 
   const historyItems = [
     {
@@ -34,23 +52,34 @@ function MyHistory() {
     // Add more items as needed
   ];
 
+
+  if(!data){
+    return (
+      <div>Loading...</div>
+    )
+  }
   return (
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-[#200f0f] rounded-lg shadow-md">
       <h2 className="text-2xl font-bold text-white mb-6">My History</h2>
       <ul className="space-y-4">
-        {historyItems.map((item) => (
-          <li key={item.id} className="flex items-center bg-[#343434] rounded-lg p-4 hover:bg-[#2c2c2c] transition duration-200">
-            <Link to={item.videoUrl} className="flex items-center w-full">
+        {data.map((video) => (
+          <li key={video._id} className="flex items-center bg-[#343434] rounded-lg p-4 hover:bg-[#2c2c2c] transition duration-200">
+            <Link
+            to={`/video-page/${video.title}/${video._id}/${video.ownerDetails.username}/${video.ownerDetails._id}`}
+            state={{ item: video }}
+            className="flex items-center w-full">
               <img
-                src={item.videoThumbnail}
-                alt={item.videoTitle}
+                src={video.thumbnail}
+                alt={video.title}
                 className="w-32 h-18 rounded-lg object-cover mr-4"
               />
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-white">{item.videoTitle}</h3>
-                <p className="text-sm text-gray-400 mb-1">{item.channelName}</p>
+                <h3 className="text-lg font-semibold text-white">{video.title}</h3>
+                <span className="text-sm text-gray-400 mb-1 mr-2 font-semibold">{video.ownerDetails.username}</span>
+                <span className="text-sm text-gray-400 mb-1">{video.views} views</span>
+
                 <p className="text-sm text-gray-300">
-                  <span className="font-semibold text-[#d96f2e]">{item.likes} likes</span> &bull; Watched on {new Date(item.watchedAt).toLocaleDateString()}
+                  <span className="font-semibold text-gray-400">{video.description}</span>
                 </p>
               </div>
             </Link>

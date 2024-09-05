@@ -6,8 +6,8 @@ import { SidebarProvider } from './context/SidebarContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <SidebarProvider>
-      <App />
-    </SidebarProvider>
+      <SidebarProvider>
+        <App />
+      </SidebarProvider>
   </StrictMode>,
 )

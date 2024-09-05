@@ -78,7 +78,7 @@ function Comment({ comment, removeComment}) {
         <div className='relative'>
             {/* <span className="mb-2">{comment.content}</span> */}
             <input
-                className={`mb-2 bg-inherit border-none ${!commentEditable ? 'outline-none' : ''}`}
+                className={`mb-2 w-64 bg-inherit border-none ${!commentEditable ? 'outline-none' : ''}`}
                 value={commentContent}
                 onChange={(e) => setCommentContent(e.target.value)}
                 readOnly={!commentEditable}

@@ -22,6 +22,7 @@ function Home() {
   }
 
   const {sidebar, setSidebar} = useContext(SidebarContext)
+  
   return (
     <div className={`relative pt-20 px-4 md:px-7 lg:px-17 ${sidebar ? 'ml-64' : ''}`}>
       <Feed />

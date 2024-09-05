@@ -70,6 +70,8 @@ function Login() {
                 config
             );
             sessionStorage.setItem("userData", JSON.stringify(response.data));
+            console.log("ji");
+            
             navigate("/home");
         } catch (error) {
             console.error("Error during registration: ", error);

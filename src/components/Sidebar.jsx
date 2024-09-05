@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { MdHome } from "react-icons/md";
 import { AiOutlineLike } from "react-icons/ai";
 import { BiSolidVideos } from "react-icons/bi";
@@ -8,11 +8,22 @@ import { MdPlaylistAdd } from "react-icons/md";
 import { FaUsers } from "react-icons/fa6";
 import { MdPostAdd } from "react-icons/md";
 import { CiVideoOn } from "react-icons/ci";
-import { Link, NavLink } from 'react-router-dom';
+import { TbLogs } from "react-icons/tb";
+import { NavLink, useNavigate } from 'react-router-dom';
 import { GrHistory } from "react-icons/gr";
 import { SidebarContext } from '../context/SidebarContext';
 
 function Sidebar() {
+
+  const userData = JSON.parse(sessionStorage.getItem("userData"))
+  const navigate = useNavigate()
+  useEffect(() => {
+      if (!userData) {
+          console.log("User data is not there")
+          navigate("/")
+      }
+  }, [userData, navigate])
+
   const {sidebar, setSidebar} = useContext(SidebarContext)
 
   return (
@@ -35,7 +46,7 @@ function Sidebar() {
         </li>
         <li className='mb-2 rounded hover:shadow hover:bg-[#d96f2e]'>
           <NavLink
-            to="/my-playlists"
+            to={`/user-playlists/${userData.data.user._id}`}
             className={({ isActive }) =>
               `flex items-center rounded px-3 text-white py-2 ${isActive ? 'bg-[#d96f2e]' : ''}`
             }
@@ -108,6 +119,17 @@ function Sidebar() {
           >
             <MdPostAdd className='inline-block w-6 h-6 mr-2 -mt-2'></MdPostAdd>
             Create Tweet
+          </NavLink>
+        </li>
+        <li className='mb-2 rounded hover:shadow hover:bg-[#d96f2e]'>
+          <NavLink
+            to="/all-tweets"
+            className={({ isActive }) =>
+              `flex items-center rounded px-3 text-white py-2 ${isActive ? 'bg-[#d96f2e]' : ''}`
+            }
+          >
+            <TbLogs className='inline-block w-6 h-6 mr-2 -mt-2'></TbLogs>
+            Tweets
           </NavLink>
         </li>
         <li className='mb-2 rounded hover:shadow hover:bg-[#d96f2e]'>
